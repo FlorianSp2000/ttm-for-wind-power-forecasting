@@ -333,7 +333,8 @@ def setup_ttm_preprocessor(df_combined: pd.DataFrame, observable_columns: list =
     return tsp, column_specifiers
 
 def prepare_wind_power_dataset(df_wind: pd.DataFrame, df_weather: pd.DataFrame, spatial_config: str = 'simple', context_length: int = 512,
-        prediction_length: int = 24, feature_config: [] = None, verbose: bool = False) -> dict:
+        prediction_length: int = 24, feature_config: [] = None, 
+        verbose: bool = False, shuffle_feature: str = None, random_seed: int = 42,) -> dict:
     """Complete pipeline to prepare wind power dataset for TTM.
     
     :param df_wind: Wind power generation data
@@ -362,6 +363,27 @@ def prepare_wind_power_dataset(df_wind: pd.DataFrame, df_weather: pd.DataFrame, 
     
     print("Step 3: Merging datasets")
     df_combined = merge_wind_weather_data(df_wind_clean, df_weather_agg, verbose=verbose)
+    
+    if shuffle_feature:
+        original_values = df_combined[shuffle_feature].values[:5].copy()
+            
+        np.random.seed(random_seed)
+        feature_data = df_combined[shuffle_feature].values.copy()
+        np.random.shuffle(feature_data)
+        df_combined[shuffle_feature] = feature_data
+        
+        # Verify shuffling worked
+        shuffled_values = df_combined[shuffle_feature].values[:5]
+        shuffling_worked = not np.array_equal(original_values, shuffled_values)
+        
+        print(f"   🔀 Original first 5 values: {original_values}")
+        print(f"   🔀 Shuffled first 5 values: {shuffled_values}")
+        print(f"   🔀 Shuffling successful: {shuffling_worked}")
+        
+        if not shuffling_worked:
+            raise ValueError(f"Shuffling of feature '{shuffle_feature}' did not change values. Please check the data.")
+        else:
+            print(f"   ✅ Feature '{shuffle_feature}' shuffled successfully with seed {random_seed}")
 
     print("Step 4: Creating temporal splits")
     df_combined, split_config = create_temporal_splits(df_combined, plot=False, verbose=verbose)

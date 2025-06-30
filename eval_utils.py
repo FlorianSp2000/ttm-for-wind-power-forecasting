@@ -103,7 +103,7 @@ def extract_experiment_metadata(result: dict, ttm_model: object, dset_test: obje
     }
 
     # Print summary
-    print_metadata_summary(metadata)
+    # print_metadata_summary(metadata)
 
     return metadata
 
@@ -157,7 +157,7 @@ def compute_multihorizon_metrics(predictions_denormalized: dict, ground_truth: d
     :param horizons: Forecast horizons to evaluate (in hours, 1-indexed). If None, uses all 24 hours
     :returns: Metrics organized by target and horizon
     """
-    print(f"\n📊 COMPUTING MULTI-HORIZON METRICS")
+    print(f"\nCOMPUTING MULTI-HORIZON METRICS")
     print("-" * 40)
 
     # Default to all 24 forecast horizons
@@ -205,8 +205,8 @@ def compute_multihorizon_metrics(predictions_denormalized: dict, ground_truth: d
             }
 
             # Print every 4th hour to avoid clutter
-            if h % 4 == 1 or h == 24:
-                print(f"    {h:>2}h ahead: MAE={mae:6.1f} MW, RMSE={rmse:6.1f} MW")
+            # if h % 4 == 1 or h == 24:
+            #     print(f"    {h:>2}h ahead: MAE={mae:6.1f} MW, RMSE={rmse:6.1f} MW")
 
         # Overall metrics (average across all horizons)
         if target_metrics:

@@ -512,113 +512,113 @@ def plot_weather_on_real_map(weather_df):
         'lon': [13.4, 10.0, 11.6, 6.9, 8.7, 9.2, 6.8, 9.7, 8.8, 13.7]
     })
     
-    # Create subplots for different maps (3x1 layout)
-    fig = make_subplots(
-        rows=1, cols=3,
-        subplot_titles=('Wind Speed at 100m Hub Height', 'Sea Level Pressure', 'Temperature'),
-        specs=[[{"type": "scattermapbox"}, {"type": "scattermapbox"}, {"type": "scattermapbox"}]]
-    )
+    # # Create subplots for different maps (3x1 layout)
+    # fig = make_subplots(
+    #     rows=1, cols=3,
+    #     subplot_titles=('Wind Speed at 100m Hub Height', 'Sea Level Pressure', 'Temperature'),
+    #     specs=[[{"type": "scattermapbox"}, {"type": "scattermapbox"}, {"type": "scattermapbox"}]]
+    # )
     
-    # Map 1: Wind speed at 100m
-    fig.add_trace(
-        go.Scattermapbox(
-            lat=coord_stats['latitude'],
-            lon=coord_stats['longitude'],
-            mode='markers',
-            marker=dict(
-                size=12,
-                color=coord_stats['wind_100m_mean'],
-                colorscale='Plasma',
-                showscale=True,
-                colorbar=dict(title="Wind Speed (m/s)", x=0.32)
-            ),
-            text=[f"Lat: {lat:.2f}<br>Lon: {lon:.2f}<br>Wind: {wind:.2f} m/s" 
-                  for lat, lon, wind in zip(coord_stats['latitude'], coord_stats['longitude'], coord_stats['wind_100m_mean'])],
-            hovertemplate='<b>Wind Speed 100m</b><br>%{text}<extra></extra>',
-            name='Wind Speed'
-        ),
-        row=1, col=1
-    )
+    # # Map 1: Wind speed at 100m
+    # fig.add_trace(
+    #     go.Scattermapbox(
+    #         lat=coord_stats['latitude'],
+    #         lon=coord_stats['longitude'],
+    #         mode='markers',
+    #         marker=dict(
+    #             size=12,
+    #             color=coord_stats['wind_100m_mean'],
+    #             colorscale='Plasma',
+    #             showscale=True,
+    #             colorbar=dict(title="Wind Speed (m/s)", x=0.32)
+    #         ),
+    #         text=[f"Lat: {lat:.2f}<br>Lon: {lon:.2f}<br>Wind: {wind:.2f} m/s" 
+    #               for lat, lon, wind in zip(coord_stats['latitude'], coord_stats['longitude'], coord_stats['wind_100m_mean'])],
+    #         hovertemplate='<b>Wind Speed 100m</b><br>%{text}<extra></extra>',
+    #         name='Wind Speed'
+    #     ),
+    #     row=1, col=1
+    # )
     
-    # Add cities to first map
-    fig.add_trace(
-        go.Scattermapbox(
-            lat=cities_df['lat'],
-            lon=cities_df['lon'],
-            mode='markers+text',
-            marker=dict(size=6, color='red'),
-            text=cities_df['city'],
-            textposition="top center",
-            textfont=dict(size=8, color='black'),
-            hovertemplate='<b>%{text}</b><extra></extra>',
-            name='Major Cities'
-        ),
-        row=1, col=1
-    )
+    # # Add cities to first map
+    # fig.add_trace(
+    #     go.Scattermapbox(
+    #         lat=cities_df['lat'],
+    #         lon=cities_df['lon'],
+    #         mode='markers+text',
+    #         marker=dict(size=6, color='red'),
+    #         text=cities_df['city'],
+    #         textposition="top center",
+    #         textfont=dict(size=8, color='black'),
+    #         hovertemplate='<b>%{text}</b><extra></extra>',
+    #         name='Major Cities'
+    #     ),
+    #     row=1, col=1
+    # )
     
-    # Map 2: Pressure
-    fig.add_trace(
-        go.Scattermapbox(
-            lat=coord_stats['latitude'],
-            lon=coord_stats['longitude'],
-            mode='markers',
-            marker=dict(
-                size=12,
-                color=coord_stats['pressure_hpa'],
-                colorscale='RdBu_r',
-                showscale=True,
-                colorbar=dict(title="Pressure (hPa)", x=0.66)
-            ),
-            text=[f"Lat: {lat:.2f}<br>Lon: {lon:.2f}<br>Pressure: {press:.1f} hPa" 
-                  for lat, lon, press in zip(coord_stats['latitude'], coord_stats['longitude'], coord_stats['pressure_hpa'])],
-            hovertemplate='<b>Sea Level Pressure</b><br>%{text}<extra></extra>',
-            name='Pressure'
-        ),
-        row=1, col=2
-    )
+    # # Map 2: Pressure
+    # fig.add_trace(
+    #     go.Scattermapbox(
+    #         lat=coord_stats['latitude'],
+    #         lon=coord_stats['longitude'],
+    #         mode='markers',
+    #         marker=dict(
+    #             size=12,
+    #             color=coord_stats['pressure_hpa'],
+    #             colorscale='RdBu_r',
+    #             showscale=True,
+    #             colorbar=dict(title="Pressure (hPa)", x=0.66)
+    #         ),
+    #         text=[f"Lat: {lat:.2f}<br>Lon: {lon:.2f}<br>Pressure: {press:.1f} hPa" 
+    #               for lat, lon, press in zip(coord_stats['latitude'], coord_stats['longitude'], coord_stats['pressure_hpa'])],
+    #         hovertemplate='<b>Sea Level Pressure</b><br>%{text}<extra></extra>',
+    #         name='Pressure'
+    #     ),
+    #     row=1, col=2
+    # )
     
-    # Map 3: Temperature
-    fig.add_trace(
-        go.Scattermapbox(
-            lat=coord_stats['latitude'],
-            lon=coord_stats['longitude'],
-            mode='markers',
-            marker=dict(
-                size=12,
-                color=coord_stats['temp_celsius'],
-                colorscale='RdYlBu_r',
-                showscale=True,
-                colorbar=dict(title="Temperature (°C)", x=1.02)
-            ),
-            text=[f"Lat: {lat:.2f}<br>Lon: {lon:.2f}<br>Temp: {temp:.1f}°C" 
-                  for lat, lon, temp in zip(coord_stats['latitude'], coord_stats['longitude'], coord_stats['temp_celsius'])],
-            hovertemplate='<b>Temperature 2m</b><br>%{text}<extra></extra>',
-            name='Temperature'
-        ),
-        row=1, col=3
-    )
+    # # Map 3: Temperature
+    # fig.add_trace(
+    #     go.Scattermapbox(
+    #         lat=coord_stats['latitude'],
+    #         lon=coord_stats['longitude'],
+    #         mode='markers',
+    #         marker=dict(
+    #             size=12,
+    #             color=coord_stats['temp_celsius'],
+    #             colorscale='RdYlBu_r',
+    #             showscale=True,
+    #             colorbar=dict(title="Temperature (°C)", x=1.02)
+    #         ),
+    #         text=[f"Lat: {lat:.2f}<br>Lon: {lon:.2f}<br>Temp: {temp:.1f}°C" 
+    #               for lat, lon, temp in zip(coord_stats['latitude'], coord_stats['longitude'], coord_stats['temp_celsius'])],
+    #         hovertemplate='<b>Temperature 2m</b><br>%{text}<extra></extra>',
+    #         name='Temperature'
+    #     ),
+    #     row=1, col=3
+    # )
     
-    # Update layout for all maps
-    for i in range(1, 4):
-        mapbox_num = '' if i == 1 else str(i)
-        fig.update_layout(**{
-            f'mapbox{mapbox_num}': dict(
-                style='open-street-map',
-                center=dict(lat=51.5, lon=10.0),  # Center of Germany
-                zoom=5.5
-            )
-        })
+    # # Update layout for all maps
+    # for i in range(1, 4):
+    #     mapbox_num = '' if i == 1 else str(i)
+    #     fig.update_layout(**{
+    #         f'mapbox{mapbox_num}': dict(
+    #             style='open-street-map',
+    #             center=dict(lat=51.5, lon=10.0),  # Center of Germany
+    #             zoom=5.5
+    #         )
+    #     })
     
-    fig.update_layout(
-        height=600,
-        width=1400,
-        title_text="Weather Data Spatial Analysis - Germany",
-        title_x=0.5,
-        showlegend=False,
-        margin=dict(l=0, r=0, t=80, b=0)
-    )
+    # fig.update_layout(
+    #     height=600,
+    #     width=1400,
+    #     title_text="Weather Data Spatial Analysis - Germany",
+    #     title_x=0.5,
+    #     showlegend=False,
+    #     margin=dict(l=0, r=0, t=80, b=0)
+    # )
     
-    fig.show()
+    # fig.show()
     
     # Create additional distribution plots
     create_weather_distributions(weather_df, coord_stats)

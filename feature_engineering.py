@@ -166,7 +166,7 @@ def create_weather_features_complex(df_weather: pd.DataFrame,
     else:
         raise ValueError(f"Unknown spatial_config: {spatial_config}. Must be one of: 'simple', 'coastal_inland', 'latitude_bands'")
     
-    print(f"After spatial aggregation: {weather_agg.shape}")
+    # print(f"After spatial aggregation: {weather_agg.shape}")
     
     # Rename time to timestamp for consistency
     weather_agg = weather_agg.rename(columns={'time': 'timestamp'})
