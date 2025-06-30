@@ -2,6 +2,7 @@
 
 Overview of file structure:
 
+```
 ├── data/                           # Dataset files
 ├── images/                         # Generated plots and visualizations
 ├── results/                        # Experiment outputs and model results
@@ -19,6 +20,7 @@ Overview of file structure:
 ├── channel_attention_map.py        # Attention mechanism visualization
 ├── feature_preselection.sh         
 └── feature_pruning.sh              
+```
 
 All relevant steps (EDA, ETL, Training, Evaluation etc.) are featured in `wind_prediction_ttm.ipynb`. Some experiments, particularly regarding feature selection, were conducted through separate shell scripts. Part of the final model evaluation and its visualization can be found in the accompanying Streamlit app.
 
