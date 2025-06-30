@@ -1,0 +1,106 @@
+Bootstrap: docker
+From: pytorch/pytorch:2.5.1-cuda12.1-cudnn9-devel
+
+%files
+    # Copy your source code/data to the container if needed
+    external/ttm /ttm
+
+%environment
+    export PYTHONPATH="/workspace:$PYTHONPATH"
+    export NVIDIA_VISIBLE_DEVICES=all
+    export NVIDIA_DRIVER_CAPABILITIES=compute,utility
+
+%post
+    # Set noninteractive installation
+    export DEBIAN_FRONTEND=noninteractive
+    
+    # Update system packages and install essentials
+    apt-get update && apt-get install -y \
+        wget \
+        curl \
+        git \
+        build-essential \
+        ca-certificates \
+        vim \
+        htop \
+        && rm -rf /var/lib/apt/lists/*
+
+    # Update pip to latest version
+    pip install --upgrade pip
+    
+    # Install core scientific packages (some may already be installed)
+    pip install --upgrade \
+        numpy \
+        pandas \
+        scipy \
+        scikit-learn \
+        matplotlib \
+        seaborn \
+        jupyter \
+        notebook \
+        ipykernel
+    
+    # Install transformers and related packages
+    pip install --upgrade \
+        transformers \
+        datasets \
+        accelerate \
+        evaluate \
+        huggingface-hub
+    
+    # Install granite-tsfm with notebooks extras - this is the main requirement
+    pip install "granite-tsfm[notebooks] @ git+https://github.com/ibm-granite/granite-tsfm.git@v0.2.22"
+    
+    # Install additional useful packages for time series work
+    pip install \
+        tqdm \
+        tensorboard \
+        optuna
+    
+    # Create workspace directory
+    mkdir -p /workspace
+    
+    # Clean up
+    apt-get clean
+    rm -rf /var/lib/apt/lists/*
+
+%runscript
+    #!/bin/bash
+    # Run the provided command
+    exec "$@"
+
+%startscript
+    #!/bin/bash
+    echo "TTM Singularity container started"
+    echo "PyTorch version: $(python -c 'import torch; print(torch.__version__)')"
+    echo "CUDA available: $(python -c 'import torch; print(torch.cuda.is_available())')"
+    echo "CUDA version: $(python -c 'import torch; print(torch.version.cuda)' 2>/dev/null || echo 'N/A')"
+    echo "GPU count: $(python -c 'import torch; print(torch.cuda.device_count() if torch.cuda.is_available() else 0)')"
+
+%help
+    This container provides a complete environment for running TTM (Tiny Time Mixers) notebooks.
+    
+    Based on pytorch/pytorch:2.3.1-cuda11.8-cudnn8-devel with/
+    pytorch/pytorch:2.5.1-cuda12.1-cudnn9-devel
+    - Python 3.11 (from base image)
+    - granite-tsfm v0.2.22 with notebooks extras
+    - Transformers, datasets, accelerate libraries
+    - Scientific computing stack (pandas, numpy, scikit-learn, etc.)
+    - Jupyter notebook support
+    
+    Usage examples:
+    
+    # Run Python script with GPU support
+    singularity exec --nv ttm.sif python your_script.py
+    
+    # Run Jupyter notebook
+    singularity exec --nv ttm.sif jupyter notebook --ip=0.0.0.0 --port=8888 --allow-root
+    
+    # Interactive shell
+    singularity shell --nv ttm.sif
+    
+    # Run your TTM training script
+    singularity exec --nv ttm.sif python train_wind_power_model.py
+    
+    # Check PyTorch and CUDA status
+    singularity exec --nv ttm.sif python -c "import torch; print(f'PyTorch: {torch.__version__}, CUDA: {torch.cuda.is_available()}')"
